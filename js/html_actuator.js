@@ -140,7 +140,7 @@ HTMLActuator.prototype.message = function (won) {
 
   this.clearContainer(this.sharingContainer);
   // this.sharingContainer.
-  $('.score-sharing').append(this.scoreShareButton()); 
+  $('.lower').append(this.scoreShareButton()); 
 };
 
 HTMLActuator.prototype.clearMessage = function () {
@@ -152,7 +152,6 @@ HTMLActuator.prototype.clearMessage = function () {
 
 
 HTMLActuator.prototype.scoreShareButton = function () {
-
   var form = $("<form></form>");
   form.attr('method','post');
   form.attr('action','javascript:serialize()');
@@ -161,7 +160,6 @@ HTMLActuator.prototype.scoreShareButton = function () {
   var score=$('<input type="hidden" name="score" value=0 id="scoreinput"/>' );
   score.val(this.score);
   form.append(score);
-
 
 // var tweet = document.createElement("a");
 // tweet.classList.add("twitter-share-button");
@@ -177,7 +175,6 @@ return form[0];
 }; 
 
 var isNotPost=true;
-var feedbackData=new Object();
 function serialize(){
   var formdata=$('form').serializeArray();
   var rawdata=new Object();
@@ -193,40 +190,30 @@ function serialize(){
     $.post("http://cmpt470.csil.sfu.ca:8016/rayproject/notfirstapp/rank/4/",jsondata,function (data){
         console.log(data);
         var jsdata=JSON.parse(data);
-        feedbackData=jsdata;
-        console.log(jsdata); 
-        isNotPost=false;
-        popupRank();
+        console.log(jsdata);
+        var rank=jsdata['rank'];
+        rank=rank.sort(function(a,b){return b['rank']-a['rank']});
+        var position=jsdata['position'];
+        var table=$('<table style="width:300px"></table>');
+        var heading=$('<tr><th>Figure</th><th>Score</th><th>Achieve Time</th></tr>');
+        table.append(heading);
+        for (var i = rank.length - 1; i >= 0; i--) {
+          var item=rank[i];
+          var tr=$('<tr></tr>');
+          var figure=$('<td></td>').append(item['figure']);
+          var score=$('<td></td>').append(item['score']);
+          var time=$('<td></td>').append(item['time']);
+          tr.append(figure);
+          tr.append(score);
+          tr.append(time);
+          table.append(tr);
+        };
+        var result="You are at rank "+position;
+        table.append($('<strong></strong>').append(result))
+          
+        $.colorbox({html:table});
     });
-  }
-  else{
-    popupRank();
-  }
-};
-
-function popupRank(){
-  var jsdata=feedbackData;
-  var rank=jsdata['rank'];
-  rank=rank.sort(function(a,b){return b['rank']-a['rank']});
-  var position=jsdata['position'];
-  var table=$('<table style="width:300px"></table>');
-  var heading=$('<tr><th>Figure</th><th>Score</th><th>Achieve Time</th></tr>');
-  table.append(heading);
-  for (var i = rank.length - 1; i >= 0; i--) {
-    var item=rank[i];
-    var tr=$('<tr></tr>');
-    var figure=$('<td></td>').append(item['figure']);
-    var score=$('<td></td>').append(item['score']);
-    var time=$('<td></td>').append(item['time']);
-    tr.append(figure);
-    tr.append(score);
-    tr.append(time);
-    table.append(tr);
+    isPost=true;
   };
-  var result="You are at rank "+position;
-  table.append($('<strong></strong>').append(result))
-    
-  $.colorbox({html:table});
-};
-
+}
 
