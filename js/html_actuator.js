@@ -1,3 +1,6 @@
+var isNotPost=true;
+var feedbackData=new Object();
+
 function HTMLActuator() {
   this.tileContainer    = document.querySelector(".tile-container");
   this.scoreContainer   = document.querySelector(".score-container");
@@ -135,6 +138,10 @@ HTMLActuator.prototype.message = function (won) {
   var type    = won ? "game-won" : "game-over";
   var message = won ? "You win!" : "Game over!";
 
+  isNotPost=true;
+  feedbackData=new Object();
+
+
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
 
@@ -176,8 +183,7 @@ HTMLActuator.prototype.scoreShareButton = function () {
 return form[0];
 }; 
 
-var isNotPost=true;
-var feedbackData=new Object();
+
 function serialize(){
   var formdata=$('form').serializeArray();
   var rawdata=new Object();
