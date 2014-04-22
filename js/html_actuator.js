@@ -210,14 +210,16 @@ function popupRank(){
   rank=rank.sort(function(a,b){return b['rank']-a['rank']});
   var position=jsdata['position'];
   var table=$('<table style="width:300px"></table>');
-  var heading=$('<tr><th>Figure</th><th>Score</th><th>Achieve Time</th></tr>');
+  var heading=$('<tr><th>#</th><th>Figure</th><th>Score</th><th>Achieve Time</th></tr>');
   table.append(heading);
   for (var i = rank.length - 1; i >= 0; i--) {
     var item=rank[i];
     var tr=$('<tr></tr>');
+    var ranknum=$('<td></td>').append(item['rank']);
     var figure=$('<td></td>').append(item['figure']);
     var score=$('<td></td>').append(item['score']);
     var time=$('<td></td>').append(item['time']);
+    tr.append(ranknum);
     tr.append(figure);
     tr.append(score);
     tr.append(time);
